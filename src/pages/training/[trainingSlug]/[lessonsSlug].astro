@@ -4,6 +4,8 @@ import { getTraining } from "@/api";
 import VideoComponent from "@/components/trainings/video.astro";
 import LessonsComponent from "@/components/trainings/lessons-list.astro";
 import LessonContentComponent  from "@/components/trainings/lesson-content.astro";
+import {Like} from "@/components/like-button.component";
+
 export async function getStaticPaths() {
     const training = await getTraining();
     return training.flatMap((training) =>
@@ -35,6 +37,7 @@ const currentLesson = training.lessons.find(
           videoUrl={currentLesson?.video ?? ""}
           title={currentLesson?.title ?? ""}
         />
+        <Like client:load />
       </div>
 
       <div class="md:col-span-4">
