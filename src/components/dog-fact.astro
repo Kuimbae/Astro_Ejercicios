@@ -1,0 +1,10 @@
+---
+import { getDogFact } from "@/api/dog-fact.api";
+
+const fact = await getDogFact();
+---
+
+<section>
+  <h2>Dog Fact</h2>
+  <p>{fact}</p>
+</section>

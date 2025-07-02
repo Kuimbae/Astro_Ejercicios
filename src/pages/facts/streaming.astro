@@ -1,0 +1,16 @@
+---
+import Layout from "@/layouts/layout.astro";
+import CatFact from "@/components/cat-fact.astro";
+import DogFact from "@/components/dog-fact.astro";
+
+// IMPORTANTE: Deshabilitamos el prerenderizado para ver el efecto de streaming
+export const prerender = false;
+---
+
+<Layout title="Streaming">
+    <h1>** Streaming **</h1>
+    <CatFact />
+<DogFact server:defer/>
+    <div slot="fallback">🐶 Loading dog fact...</div>
+</DogFact>
+</Layout>

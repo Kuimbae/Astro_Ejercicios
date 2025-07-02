@@ -1,0 +1,18 @@
+---
+import Layout from "@/layouts/layout.astro";
+import { getCatFact } from "@/api/cat-fact.api";
+import { getDogFact } from "@/api/dog-fact.api";
+
+export const prerender = false;
+
+const catFact = await getCatFact();
+const dogFact = await getDogFact();
+---
+
+<Layout title="No Streaming">
+    <h1>No Streaming</h1>
+    <h2>Cat Fact</h2>
+    <p>{catFact}</p>
+    <h2>Dog Fact</h2>
+    <p>{dogFact}</p>
+</Layout>
