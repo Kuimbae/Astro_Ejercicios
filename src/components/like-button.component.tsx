@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
+import { actions } from "astro:actions";
 
 export const Like: React.FC = () => {
   const [likes, setLikes] = useState<number>(0);
 
   useEffect(() => {
     // Cargar los likes desde localStorage al montar el componente
-    const storedLikes = localStorage.getItem("likes");
-    if (storedLikes) {
-      setLikes(parseInt(storedLikes, 10));
-    }
+    actions.getLikes().then((response) => {
+      setLikes(response?.data?.likes ?? 0);
+    });
   }, []);
 
-  const handleLike = () => {
-    const newLikes = likes + 1;
-    setLikes(newLikes);
-    localStorage.setItem("likes", newLikes.toString());
+  const handleLike = async () => {
+    const result = await actions.addLike();
+
+    setLikes(result?.data?.likes ?? 0);
   };
 
   return (
