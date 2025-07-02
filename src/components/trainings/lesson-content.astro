@@ -1,12 +1,44 @@
 ---
+import { marked } from 'marked';
+import hljs from 'highlight.js';
+import sanitizeHtml from 'sanitize-html';
+
+const renderer = new marked.Renderer();
+
+renderer.code = ({ text, lang }) => {
+  const validLang = hljs.getLanguage(lang || 'plaintext') ? lang || 'plaintext' : 'plaintext';
+  const highlighted = hljs.highlight(text, { language: validLang }).value;
+  return `<pre><code class="hljs ${validLang}">${highlighted}</code></pre>`;
+ };
+
+marked.setOptions({ renderer });
+
 export interface Props {
   content: string;
 }
 
 const { content } = Astro.props;
+const dangerousHtmlContent = await marked(content);
+
+ const htmlContent = sanitizeHtml(dangerousHtmlContent, {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+    "pre", // Permitir bloques de código multilínea
+    "code", // Permitir código en línea
+    "span", // Usado por highlight.js para colorear palabras clave, comentarios...
+  ]),
+  allowedAttributes: {
+    ...sanitizeHtml.defaults.allowedAttributes, // Atributos permitidos por defecto
+    "*": ["class"], // Permitir class en todos los elementos (usado por hljs)
+  },
+});
+
 ---
 
 <h3 class="text-xl font-bold mb-4 text-gray-800">Contenido de la Lección</h3>
-<p id="lessonContent" class="text-gray-700 leading-relaxed text-base">
-  {content}
-</p>
+<div class="markdown-content" set:html={htmlContent}/>
+
+<style>
+  :global(.markdown-content p) {
+    margin-bottom: 1em;
+  }
+</style>
